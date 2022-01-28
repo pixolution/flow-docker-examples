@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  solr:
+    image: registry.dev.pixolution.de/flow/flow-docker:4.0.3-8.11-cpu
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 4G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    volumes:
+      - flow-index:/var/solr
+      - ./flow-jars/:/pixolution
+    ports:
+      - "8983:8983"
+    logging:
+      driver: "json-file"
+      options:
+        mode: "non-blocking"
+        tag: "{{.Name}}"
+        max-size: "10M"
+        max-file: "10"
+
+volumes:
+  flow-index:
