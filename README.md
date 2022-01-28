@@ -25,7 +25,7 @@ docker volume create flow-index
 
 * start the pixolution Flow image in background
 ```
-docker run --rm -p 8983:8983 -v flow-index:/var/solr -v "$(pwd)/flow-jars:/pixolution" --name pixolution-flow -d registry.dev.pixolution.de/flow/flow-docker:4.0.3-8.11-cpu
+docker run --rm -p 8983:8983 -v flow-index:/var/solr -v "$(pwd)/flow-jars:/pixolution" --name pixolution-flow -d pixolution/flow-hub:4.0.3-8.11
 ```
 
 * inspect that the container is running
@@ -128,7 +128,7 @@ docker-compose down
 * delete named volume with index data (wipe persistent data)
 ```
 docker volume ls
-docker volume rm flow-hub-examples_flow-index
+docker volume rm flow-docker-examples_flow-index
 ```
 
 ## Kubernetes deployment as SolrCloud
@@ -142,7 +142,7 @@ Make sure that the following tools are installed:
 
 First step is to build a new image that include all needed jars using the provided `Dockerfile` (note the `.` at the end)
 ```
-docker build --build-arg image="registry.dev.pixolution.de/flow/flow-docker:4.0.3-8.11-cpu" -t registry.your-domain.com/customized-flow-docker:4.0.3-8.11 .
+docker build --build-arg image="pixolution/flow-hub:4.0.3-8.11" -t registry.your-domain.com/customized-flow-docker:4.0.3-8.11 .
 ```
 
 Allow docker access to your private registry:

@@ -2,7 +2,7 @@ version: "3"
 
 services:
   solr:
-    image: registry.dev.pixolution.de/flow/flow-docker:4.0.3-8.11-cpu
+    image: pixolution/flow-hub:4.0.3-8.11
     deploy:
       mode: replicated
       replicas: 1
