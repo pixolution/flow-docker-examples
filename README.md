@@ -133,7 +133,7 @@ docker volume rm flow-docker-examples_flow-index
 
 ## Kubernetes deployment as SolrCloud
 
-A deployment into Kubernetes is more complex since bind-mount folders to provide the pixolution Flow module jars contradicts the philosophy of Kubernetes. The easiest way is to build a new docker image that include all needed jars. This is the most flexible and robust way. To provide the customized image to your Kubernetes there is also a provate docker registry needed that Kubernetes is able to access.
+A deployment into Kubernetes is more complex since bind-mount folders to provide the pixolution Flow module jars contradicts the philosophy of Kubernetes. The easiest way is to build a new docker image that include all needed jars. This is the most flexible and robust way. To provide the customized image to your Kubernetes there is also a private docker registry needed that Kubernetes is able to access.
 
 Make sure that the following tools are installed:
  * [docker](https://docs.docker.com/engine/install/)
