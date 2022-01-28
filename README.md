@@ -1,6 +1,6 @@
 # Getting started with pixolution Flow docker
 
-The following guide explains how to run pixolution Flow using the dockerized images from [docker hub](https://TODO)
+The following guide explains how to run pixolution Flow using the dockerized images from [docker hub](https://hub.docker.com/r/pixolution/flow-hub)
 
 # Preparation
 * Clone this repo
