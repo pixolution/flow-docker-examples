@@ -1,54 +1,62 @@
-# Getting started with pixolution Flow docker
+# Getting started with _pixolution Flow_ docker
 
-The following guide explains how to run pixolution Flow using the dockerized images from [docker hub](https://hub.docker.com/r/pixolution/flow-hub)
+This guide explains how to run _pixolution Flow_ using the dockerized images from [Docker Hub](https://hub.docker.com/r/pixolution/flow-hub).
+It serves as a starting point and cheat sheet for different scenarios:
+1. Standalone Docker,
+1. Docker Swarm,
+1. docker-compose and
+1. Kubernetes
 
 # Preparation
 * Clone this repo
-* Unzip your pixolution Flow module jars (either the `pixolution-flow-4.0.3-solr-8.11.zip` or your custom AI modules) into a folder `flow-jars/` beside the `docker-compose.yml` file. In case of a pixolution Flow release ZIP run the following commands:
+* Unzip the provided _pixolution Flow_ module jars (e.g. `pixolution-flow-4.0.3-solr-8.11.zip` or your custom AI modules) into the `flow-jars/` folder:
 ```
 unzip pixolution-flow-4.0.3-solr-8.11.zip
+```
+* Download the dependencies of the _Flow_ modules:
+```
 bash download_deps.sh
 ```
 
-Make sure all module jars as well as their third-party dependencies are placed in the `flow-jars/`
+Make sure all module jars as well as their third-party dependencies are placed in the `flow-jars/` folder.
 
-**Please note:** All examples use [docker named volumes](https://docs.docker.com/storage/volumes/) to persist the index data in `/var/solr/`. The folder also contains the log configuration, the `solr.xml` global configuration file as well as the `pixolution-flow-4.0.3-solr-8.11.jar` plugin jar. Using docker volumes makes sure this data is synced to
-the volume before it is over-mounted. When using bind-mounts the `/var/solr` folder would be overlaid and you need to manually populate the folder with the needed files.
+**Please note:** All examples use [docker named volumes](https://docs.docker.com/storage/volumes/) to persist the index data in `/var/solr/`. The folder also contains the log configuration, the `solr.xml` global configuration file as well as the `pixolution-flow-4.0.3-solr-8.11.jar` plugin jar. Using docker volumes ensures the data is synced to
+volume before it is over-mounted. When using bind-mounts instead, the `/var/solr` folder would be overlaid and you need to manually populate the folder with the needed files.
 
 
 ## Standalone docker
-* install a recent version of [docker](https://docs.docker.com/engine/install/) or a drop-in alternative like [podman](https://podman.io/getting-started/)
-* create a named volume for the index data
+Install a recent version of [docker](https://docs.docker.com/engine/install/) or a drop-in alternative like [podman](https://podman.io/getting-started/).
+Create a named volume for the index data
 ```
 docker volume create flow-index
 ```
 
-* start the pixolution Flow image in background
+Start the _pixolution Flow_ image in background
 ```
 docker run --rm -p 8983:8983 -v flow-index:/var/solr -v "$(pwd)/flow-jars:/pixolution" --name pixolution-flow -d pixolution/flow-hub:4.0.3-8.11
 ```
 
-* inspect that the container is running
+Inspect that the container is running
 ```
 docker ps
 ```
 
-* inspect pixolution flow instance logs
+Inspect _pixolution Flow_ instance logs
 ```
 docker logs -f $(docker ps --format '{{.ID}} {{.Names}}'| grep pixolution-flow | cut -d" " -f1)
 ```
 
-* check whether pixolution Flow could be loaded and to automatically create the needed fields, call once:
+Initialize _pixolution Flow_ once and check if it can be loaded and configure its fields:
 ```
 curl "http://localhost:8983/solr/my-collection/pixolution"
 ```
 
-* stop the running container (shutdown)
+Stop the running container (shutdown)
 ```
 docker stop $(docker ps --format '{{.ID}} {{.Names}}'| grep pixolution-flow | cut -d" " -f1)
 ```
 
-* delete named volume with index data (wipe persistent data)
+Delete named volume with index data (wipe persistent data)
 ```
 docker volume ls
 docker volume rm flow-index
@@ -56,76 +64,74 @@ docker volume rm flow-index
 
 
 ## Docker Swarm stack
-* install a recent version of [docker](https://docs.docker.com/engine/install/)
-
-* init a docker swarm
+Install a recent version of [docker](https://docs.docker.com/engine/install/).
+Init a docker swarm
 ```
 docker swarm init
 ```
 
-* deploy stack to the swarm
+Deploy stack to the swarm
 ```
 docker stack deploy -c docker-compose.yml flow-stack
 ```
 
-* check whether pixolution Flow could be loaded and to automatically create the needed fields, call once:
+Initialize _pixolution Flow_ once and check if it can be loaded and configure its fields:
 ```
 curl "http://localhost:8983/solr/my-collection/pixolution"
 ```
 
-* inspect stack
+Inspect stack
 ```
 docker stack ls
 docker stack ps flow-stack
 ```
 
-* inspect pixolution flow instance logs
+Inspect _pixolution Flow_ instance logs
 ```
 docker service ls
 docker service logs -f flow-stack_solr
 ```
 
-* delete stack (shutdown)
+Dlete stack (shutdown)
 ```
 docker stack rm flow-stack
 ```
 
-* delete named volume with index data (wipe persistent data)
+Delete named volume with index data (wipe persistent data)
 ```
 docker volume ls
 docker volume rm flow-stack_flow-index
 ```
 
 ## docker-compose ensemble
-* install [docker](https://docs.docker.com/engine/install/) or any other container environment that supports docker-compose definitions (e.g. [podman and docker-compose](https://www.redhat.com/sysadmin/podman-docker-compose))
-* install the [docker-compose scripts](https://docs.docker.com/compose/install/)
-
-* start the ensemble
+Install [docker](https://docs.docker.com/engine/install/) or any other container environment that supports docker-compose definitions (e.g. [podman and docker-compose](https://www.redhat.com/sysadmin/podman-docker-compose))
+Install the [docker-compose scripts](https://docs.docker.com/compose/install/)
+Start the ensemble
 ```
 docker-compose -d up
 ```
 
-* check whether pixolution Flow could be loaded and to automatically create the needed fields, call once:
+Initialize _pixolution Flow_ once and check if it can be loaded and configure its fields:
 ```
 curl "http://localhost:8983/solr/my-collection/pixolution"
 ```
 
-* inspect ensemble
+Inspect ensemble
 ```
 docker-compose images
 ```
 
-* inspect pixolution flow instance logs
+Inspect _pixolution Flow_ instance logs
 ```
 docker-compose logs -f
 ```
 
-* remove ensemble (shutdown)
+Remove ensemble (shutdown)
 ```
 docker-compose down
 ```
 
-* delete named volume with index data (wipe persistent data)
+Delete named volume with index data (wipe persistent data)
 ```
 docker volume ls
 docker volume rm flow-docker-examples_flow-index
@@ -133,14 +139,14 @@ docker volume rm flow-docker-examples_flow-index
 
 ## Kubernetes deployment as SolrCloud
 
-A deployment into Kubernetes is more complex since bind-mount folders to provide the pixolution Flow module jars contradicts the philosophy of Kubernetes. The easiest way is to build a new docker image that include all needed jars. This is the most flexible and robust way. To provide the customized image to your Kubernetes there is also a private docker registry needed that Kubernetes is able to access.
+A deployment into Kubernetes is more complex because bind-mount folders the _pixolution Flow_ jars contradicts the philosophy of Kubernetes. The easiest way is to build a new docker image that include all needed jars. This is the most flexible and robust way. To provide the customized image to your Kubernetes you need a private docker registry that Kubernetes is able to access.
 
 Make sure that the following tools are installed:
  * [docker](https://docs.docker.com/engine/install/)
  * [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
  * [helm](https://helm.sh/docs/intro/install/)
 
-First step is to build a new image that include all needed jars using the provided `Dockerfile` (note the `.` at the end)
+The first step is to build a new image that include all needed jars using the provided `Dockerfile` (note the `.` at the end)
 ```
 docker build --build-arg image="pixolution/flow-hub:4.0.3-8.11" -t registry.your-domain.com/customized-flow-docker:4.0.3-8.11 .
 ```
@@ -207,7 +213,7 @@ spec:
       replicas: 1
 ```
 
-* Deploy the SolrCloud definition to your Kubernetes cluster
+Deploy the SolrCloud definition to your Kubernetes cluster
 ```
 kubectl apply -f flow-cloud-definition.yaml
 ```
