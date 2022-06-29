@@ -9,9 +9,9 @@ It serves as a starting point and cheat sheet for different scenarios:
 
 # Preparation
 * Clone this repo
-* Unzip the provided _pixolution Flow_ module jars (e.g. `pixolution-flow-4.0.3-solr-8.11.zip` or your custom AI modules) into the `flow-jars/` folder:
+* Unzip the provided _pixolution Flow_ module jars (e.g. `pixolution-flow-4.0.4-solr-9.0.zip` or your custom AI modules) into the `flow-jars/` folder:
 ```
-unzip pixolution-flow-4.0.3-solr-8.11.zip
+unzip pixolution-flow-4.0.4-solr-9.0.zip
 ```
 * Download the dependencies of the _Flow_ modules:
 ```
@@ -20,7 +20,7 @@ bash download_deps.sh
 
 Make sure all module jars as well as their third-party dependencies are placed in the `flow-jars/` folder.
 
-**Please note:** All examples use [docker named volumes](https://docs.docker.com/storage/volumes/) to persist the index data in `/var/solr/`. The folder also contains the log configuration, the `solr.xml` global configuration file as well as the `pixolution-flow-4.0.3-solr-8.11.jar` plugin jar. Using docker volumes ensures the data is synced to
+**Please note:** All examples use [docker named volumes](https://docs.docker.com/storage/volumes/) to persist the index data in `/var/solr/`. The folder also contains the log configuration, the `solr.xml` global configuration file as well as the `pixolution-flow-4.0.4-solr-9.0.jar` plugin jar. Using docker volumes ensures the data is synced to
 volume before it is over-mounted. When using bind-mounts instead, the `/var/solr` folder would be overlaid and you need to manually populate the folder with the needed files.
 
 
@@ -33,7 +33,7 @@ docker volume create flow-index
 
 Start the _pixolution Flow_ image in background
 ```
-docker run --rm -p 8983:8983 -v flow-index:/var/solr -v "$(pwd)/flow-jars:/pixolution" --name pixolution-flow -d pixolution/flow-hub:4.0.3-8.11
+docker run --rm -p 8983:8983 -v flow-index:/var/solr -v "$(pwd)/flow-jars:/pixolution" --name pixolution-flow -d pixolution/flow-hub:4.0.4-9.0
 ```
 
 Inspect that the container is running
@@ -148,7 +148,7 @@ Make sure that the following tools are installed:
 
 The first step is to build a new image that include all needed jars using the provided `Dockerfile` (note the `.` at the end)
 ```
-docker build --build-arg image="pixolution/flow-hub:4.0.3-8.11" -t registry.your-domain.com/customized-flow-docker:4.0.3-8.11 .
+docker build --build-arg image="pixolution/flow-hub:4.0.4-9.0" -t registry.your-domain.com/customized-flow-docker:4.0.4-9.0 .
 ```
 
 Allow docker access to your private registry:
@@ -156,9 +156,9 @@ Allow docker access to your private registry:
 docker login registry.your-domain.com
 ```
 
-Push the newly built image `registry.your-domain.com/customized-flow-docker:4.0.3-8.11` to your private registry
+Push the newly built image `registry.your-domain.com/customized-flow-docker:4.0.4-9.0` to your private registry
 ```
-docker push registry.your-domain.com/customized-flow-docker:4.0.3-8.11
+docker push registry.your-domain.com/customized-flow-docker:4.0.4-9.0
 ```
 
 To deploy a SolrCloud to Kubernetes we use the [solr-operator helm chart](https://apache.github.io/solr-operator/docs/running-the-operator.html).
@@ -191,7 +191,7 @@ spec:
   replicas: 3
   solrImage:
     repository: registry.your-domain.com/customized-flow-docker
-    tag: 4.0.3-8.11
+    tag: 4.0.4-9.0
     imagePullSecret: regcred-flow
   solrJavaMem: -Xms500M -Xmx5000M
   updateStrategy:
